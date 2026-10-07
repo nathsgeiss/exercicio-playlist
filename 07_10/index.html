@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de espera</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+
+    <main class="player">
+
+        <header class="topo">
+            <h1>Na fila</h1>
+            <p class="contagem">Fila vazia</p>
+        </header>
+
+        <form class="tocando">
+            <h2>Tocando agora</h2>
+
+            <p>
+                <label for="nome">Nada tocando</label>
+                <!-- <input type="text" id="nome" class="campo-nome"> -->
+            </p>
+
+            <div class="botoes">
+                <button type="button" class="botao-proximo">Próxima</button>
+            </div>
+
+            <p class="aviso"></p>
+        </form>
+
+        <section class="formulario">
+            <h2>Comandos</h2>
+             <p>
+                <label for="nome">Música</label>
+                <input type="text" id="nome" class="musica">
+            </p>
+
+            <div class="botoes">
+                <button type="button" class="botao-adicionar">Adicionar ao fim</button>
+                <button type="button" class="botao-tocar-depois">Tocar depois desta</button>
+                <button type="button" class="botao-remover">Remover da fila</button>
+                <button type="button" class="botao-desfazer">Desfazer última</button>
+            </div>
+
+            <p class="aviso"></p>
+        </section>
+
+        <section class="fila">
+            <h2>A seguir</h2>
+            <ol class="lista">                
+            </ol>
+            <!-- <p class="nome-chamado">Ninguém</p>
+            <button type="button" class="botao-chamar">Chamar próximo</button> -->
+        </section>
+
+    </main>
+
+</body>
+
+</html>

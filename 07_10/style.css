@@ -1,0 +1,55 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 16px;
+    font-family: Arial, sans-serif;
+}
+
+.topo,
+.tocando,
+.formulario,
+.fila {
+    padding: 12px;
+    border: 2px solid #333333;
+}
+
+.topo     { background-color: #fffddc; }
+.tocando { background-color: #e7f5ff; }
+.formulario   { background-color: #ebfbee; }
+.fila  { background-color: #fff0f6; }
+
+.topo     { grid-area: area1; }
+.tocando { grid-area: area2; }
+.formulario { grid-area: area3; }
+.fila  { grid-area: area4; }
+
+
+.player {
+    display: grid;
+    gap: 12px;
+    max-width: 960px;
+    margin: 0 auto;
+
+    /* Celular: tudo empilhado. A chamada vem logo depois
+       do topo, porque é o que mais importa. */
+    grid-template-areas:
+        "area1"
+        "area2"
+        "area3"
+        "area4";
+}
+
+@media (min-width: 800px) {
+
+    .player {
+        grid-template-columns: 1fr 2fr;
+        grid-template-areas:
+            "area1     area1"
+            "area2     area4"
+            "area3     area4";
+    }
+
+}
