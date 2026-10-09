@@ -1,9 +1,6 @@
 /* ===========================================================
-   Lista de espera — os eventos, sem lógica nenhuma ainda.
-
-   Cada ouvinte só avisa no console que funcionou.
+   Lista de espera — com a lógica de "Tocando agora" e "Próxima".
    =========================================================== */
-
 
 /* -----------------------------------------------------------
    Selecionar
@@ -23,6 +20,12 @@ const contagem = document.querySelector('.contagem');
 
 const aviso = document.querySelector('.aviso');
 
+// Seleciona o span dentro do label onde aparece o nome da música atual
+const tocandoAtualElemento = document.querySelector('.tocando-atual');
+
+// Variável para guardar a música que está tocando agora
+let tocandoAgora = null;
+
 // Um <li> para cada nome da lista.
 function montarItensDaEspera(espera) {
     let itens = '';
@@ -34,7 +37,7 @@ function montarItensDaEspera(espera) {
 
 function montarTextoDaContagem(quantidade) {
     if (quantidade === 0) {
-        return '3 músicas na fila';
+        return 'Nenhuma música na fila';
     }
     if (quantidade === 1) {
         return '1 música na fila';
@@ -43,17 +46,28 @@ function montarTextoDaContagem(quantidade) {
 }
 
 function mostrarEspera() {
+    // Se ainda não tem música tocando, pega automaticamente a primeira da lista
+    if (!tocandoAgora && musicas.length > 0) {
+        tocandoAgora = musicas.shift(); // Remove a primeira da lista e guarda
+    }
+
+    // Atualiza o texto da música que está tocando agora mantendo o visual intacto
+    if (tocandoAtualElemento) {
+        tocandoAtualElemento.textContent = tocandoAgora ? tocandoAgora : 'Nada tocando';
+    }
+
+    // Renderiza o resto da lista e a contagem
     lista.innerHTML = montarItensDaEspera(musicas);
     contagem.textContent = montarTextoDaContagem(musicas.length);
 }
 
 // Devolve o problema do nome novo, ou '' se estiver tudo certo.
-function montarAvisoDoNomeMusica(musica, musicas) {
-    if (musica === '') {
+function montarAvisoDoNomeMusica(nomeMusica, musicasAtuais) {
+    if (nomeMusica === '') {
         return 'Escreva o nome da música.';
     }
-    if (musicas.includes(musica)) {
-        return musica + ' já está na lista.';
+    if (musicasAtuais.includes(nomeMusica) || nomeMusica === tocandoAgora) {
+        return nomeMusica + ' já está na lista ou tocando.';
     }
     return '';
 }
@@ -77,24 +91,28 @@ musica.addEventListener('input', function () {
     console.log('digitou: ' + musica.value);
 });
 
-// submit: o botão "Entrar na fila" e o Enter no campo
-// cadastro.addEventListener('submit', function (evento) {
-//     evento.preventDefault();
-//     console.log('enviou o cadastro: entrar na fila');
-// });
-
-// click: uma vez por clique
+// Botão "Próxima": avança para a próxima música da fila
 botaoProximo.addEventListener('click', function () {
     console.log('clicou em Proxima');
+
+    if (musicas.length > 0) {
+        tocandoAgora = musicas.shift(); // Pega a próxima da fila e tira de lá
+        aviso.textContent = '';
+    } else {
+        tocandoAgora = null; // Se a lista esvaziou, limpa o tocando agora
+        aviso.textContent = 'A fila acabou!';
+    }
+    
+    mostrarEspera();
 });
 
 botaoAdicionar.addEventListener('click', function () {
     console.log('clicou em Adicionar ao fim');
-    const musica = lerMusica();
-    aviso.textContent = montarAvisoDoNomeMusica(musica, musicas);
+    const nomeMusica = lerMusica();
+    aviso.textContent = montarAvisoDoNomeMusica(nomeMusica, musicas);
     
     if (aviso.textContent === '') {
-        musicas.push(musica);
+        musicas.push(nomeMusica);
         limparCampo();
         mostrarEspera();
     }
@@ -102,11 +120,11 @@ botaoAdicionar.addEventListener('click', function () {
 
 botaoTocarDepois.addEventListener('click', function () {
     console.log('clicou em Tocar depois desta');
-    const musica = lerMusica();
-    aviso.textContent = montarAvisoDoNomeMusica(musica, musicas);
+    const nomeMusica = lerMusica();
+    aviso.textContent = montarAvisoDoNomeMusica(nomeMusica, musicas);
     
     if (aviso.textContent === '') {
-        musicas.unshift(musica);
+        musicas.unshift(nomeMusica);
         limparCampo();
         mostrarEspera();
     }
@@ -114,17 +132,16 @@ botaoTocarDepois.addEventListener('click', function () {
 
 botaoRemover.addEventListener('click', function () {
     console.log('clicou em Remover da fila');
-    const musica = lerMusica();
-    const posicao = musicas.indexOf(musica);
-    // aviso.textContent = montarAvisoDoNomeMusica(musica, musicas);
+    const nomeMusica = lerMusica();
+    const posicao = musicas.indexOf(nomeMusica);
 
-    if (musica  === '') {
+    if (nomeMusica === '') {
         aviso.textContent = 'Escreva o nome da música.';
     } else if (posicao === -1) {
-        aviso.textContent = musica + ' não está na lista.';
+        aviso.textContent = nomeMusica + ' não está na lista.';
     } else {
         musicas.splice(posicao, 1);
-        aviso.textContent = musica + ' foi removida.';
+        aviso.textContent = nomeMusica + ' foi removida.';
         limparCampo();
         mostrarEspera();
     }
