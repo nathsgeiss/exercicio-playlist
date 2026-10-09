@@ -18,8 +18,10 @@ const botaoRemover = document.querySelector('.botao-remover');
 const botaoDesfazer = document.querySelector('.botao-desfazer');
 
 const lista = document.querySelector('.lista');
-const musicas = ['APT', 'Die With A Smile', 'BIRDS OF FEATHER'];
+const musicas = ['Lover', 'Your Eyes', 'Hello Stranger'];
 const contagem = document.querySelector('.contagem');
+
+const aviso = document.querySelector('.aviso');
 
 // Um <li> para cada nome da lista.
 function montarItensDaEspera(espera) {
@@ -46,14 +48,22 @@ function mostrarEspera() {
 }
 
 // Devolve o problema do nome novo, ou '' se estiver tudo certo.
-function montarAvisoDoNovoNome(nome, espera) {
-    if (nome === '') {
-        return 'Escreva o nome.';
+function montarAvisoDoNomeMusica(musica, musicas) {
+    if (musica === '') {
+        return 'Escreva o nome da música.';
     }
-    if (espera.includes(nome)) {
-        return nome + ' já está na lista.';
+    if (musicas.includes(musica)) {
+        return musica + ' já está na lista.';
     }
     return '';
+}
+
+function lerMusica() {
+    return musica.value.trim();
+}
+
+function limparCampo() {
+    musica.value = '';
 }
 
 mostrarEspera(); 
@@ -80,16 +90,54 @@ botaoProximo.addEventListener('click', function () {
 
 botaoAdicionar.addEventListener('click', function () {
     console.log('clicou em Adicionar ao fim');
+    const musica = lerMusica();
+    aviso.textContent = montarAvisoDoNomeMusica(musica, musicas);
+    
+    if (aviso.textContent === '') {
+        musicas.push(musica);
+        limparCampo();
+        mostrarEspera();
+    }
 });
 
 botaoTocarDepois.addEventListener('click', function () {
     console.log('clicou em Tocar depois desta');
+    const musica = lerMusica();
+    aviso.textContent = montarAvisoDoNomeMusica(musica, musicas);
+    
+    if (aviso.textContent === '') {
+        musicas.unshift(musica);
+        limparCampo();
+        mostrarEspera();
+    }
 });
 
 botaoRemover.addEventListener('click', function () {
     console.log('clicou em Remover da fila');
+    const musica = lerMusica();
+    const posicao = musicas.indexOf(musica);
+    // aviso.textContent = montarAvisoDoNomeMusica(musica, musicas);
+
+    if (musica  === '') {
+        aviso.textContent = 'Escreva o nome da música.';
+    } else if (posicao === -1) {
+        aviso.textContent = musica + ' não está na lista.';
+    } else {
+        musicas.splice(posicao, 1);
+        aviso.textContent = musica + ' foi removida.';
+        limparCampo();
+        mostrarEspera();
+    }
 });
 
 botaoDesfazer.addEventListener('click', function () {
     console.log('clicou em Desfazer ultima');
+
+    if (musicas.length === 0) {
+        aviso.textContent = 'Não há músicas na fila.';
+    } else {
+        const remover = musicas.pop();
+        aviso.textContent = remover + ' saiu da fila.';
+        mostrarEspera(); 
+    }
 });

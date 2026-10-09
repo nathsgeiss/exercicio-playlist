@@ -23,6 +23,7 @@ function montarItensDaEspera(espera) {
     let itens = '';
     for (let i = 0; i < espera.length; i++) {
         itens = itens + `<li>${espera[i]}</li>`;
+        console.log(`[montarItensDaEspera] itens: ${itens}`);
     }
     return itens;
 }
@@ -60,6 +61,7 @@ const cadastro = document.querySelector('.cadastro');
 const campoNome = document.querySelector('.campo-nome');
 const aviso = document.querySelector('.aviso');
 
+const botaoEntrar = document.querySelector('.botao-entrar');
 const botaoPreferencial = document.querySelector('.botao-preferencial');
 const botaoDesistiu = document.querySelector('.botao-desistiu');
 const botaoDesfazer = document.querySelector('.botao-desfazer');
@@ -105,9 +107,19 @@ campoNome.addEventListener('input', function () {
 });
 
 // push: entra no fim
-cadastro.addEventListener('submit', function (evento) {
-    evento.preventDefault();
+// cadastro.addEventListener('submit', function (evento) {
+//     evento.preventDefault();
 
+//     const nome = lerNome();
+//     aviso.textContent = montarAvisoDoNovoNome(nome, espera);
+
+//     if (aviso.textContent === '') {
+//         espera.push(nome);
+//         limparCampo();
+//         mostrarEspera();
+//     }
+// });
+botaoEntrar.addEventListener('click', function(){
     const nome = lerNome();
     aviso.textContent = montarAvisoDoNovoNome(nome, espera);
 
